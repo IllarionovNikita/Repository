@@ -1,195 +1,184 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
 import sqlite3
 import pathlib
 from pathlib import Path
+from tkinter import *
+from tkinter import ttk
+import re
+import tkinter as tk
 
 
-#def dbconnect(self):
-#    """
-#    connecting DB
-#    """
-#    sqlite_connect = sqlite3.connect('airports.db')
-#    cursor = sqlite_connect.cursor()
-#    cursor.execute(f"SELECT city FROM airports ORDER BY city ASC")
-#    return [city for cities in cursor.fetchall() for city in cities]
+class DBConnect:
+    """
+    connecting DB
+    """
+    def __init__(self):
+        self.db_path = Path(pathlib.Path.cwd(), 'airports.db')
+
+    def db_connect(self):
+        sqlite_connection = sqlite3.connect(self.db_path)
+        return sqlite_connection
 
 
-class UiRoot(object):
+class DBFetch:
+    """
+    fetching the airports data and converting to list
+    """
+    def __init__(self):
+        self.db = DBConnect()
 
-#    def __init__(self):
-#        self.dbconnect = dbconnect
-
-    def setupUi(self, root):
-        root.setObjectName("root")
-        root.resize(791, 750)
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(root.sizePolicy().hasHeightForWidth())
-
-        root.setSizePolicy(sizePolicy)
-        root.setStyleSheet("background-color: rgb(192, 193, 199);\n" "border-color: rgb(0, 4, 255);")
-        root.setSizeGripEnabled(False)
-        root.setModal(False)
-
-        self.buttonBox = QtWidgets.QDialogButtonBox(root)
-        self.buttonBox.setGeometry(QtCore.QRect(600, 0, 171, 101))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.buttonBox.sizePolicy().hasHeightForWidth())
-
-        self.buttonBox.setSizePolicy(sizePolicy)
-        self.buttonBox.setMinimumSize(QtCore.QSize(0, 50))
-        self.buttonBox.setMaximumSize(QtCore.QSize(500, 200))
-        self.buttonBox.setSizeIncrement(QtCore.QSize(0, 0))
-        self.buttonBox.setBaseSize(QtCore.QSize(0, 0))
-        self.buttonBox.setStyleSheet("")
-        self.buttonBox.setOrientation(QtCore.Qt.Vertical)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Apply|QtWidgets.QDialogButtonBox.Reset)
-        self.buttonBox.setCenterButtons(True)
-        self.buttonBox.setObjectName("buttonBox")
-
-        self.tableWidget = QtWidgets.QTableWidget(root)
-        self.tableWidget.setGeometry(QtCore.QRect(20, 100, 750, 630))
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
-
-        self.tableWidget.setSizePolicy(sizePolicy)
-        self.tableWidget.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(0)
-        self.tableWidget.setRowCount(0)
-        self.tableWidget.setColumnCount(5)
-        self.tableWidget.setHorizontalHeaderLabels(('Airlines', 'depart city', 'arrive city', 'latitude', 'longitude'))
-        self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-
-        self.label = QtWidgets.QLabel(root)
-        self.label.setGeometry(QtCore.QRect(90, 0, 101, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setUnderline(False)
-        font.setWeight(50)
-        font.setKerning(True)
-        self.label.setFont(font)
-        self.label.setScaledContents(False)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(root)
-        self.label_2.setGeometry(QtCore.QRect(370, 0, 101, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setUnderline(False)
-        font.setWeight(50)
-        font.setKerning(True)
-
-        self.label_2.setFont(font)
-        self.label_2.setScaledContents(False)
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(root)
-        self.label_3.setGeometry(QtCore.QRect(90, 40, 101, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setUnderline(False)
-        font.setWeight(50)
-        font.setKerning(True)
-
-        self.label_3.setFont(font)
-        self.label_3.setScaledContents(False)
-        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(root)
-        self.label_4.setGeometry(QtCore.QRect(370, 40, 101, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setUnderline(False)
-        font.setWeight(50)
-        font.setKerning(True)
-
-        self.label_4.setFont(font)
-        self.label_4.setScaledContents(False)
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
-
-        self.textBrowser_4 = QtWidgets.QTextBrowser(root)
-        self.textBrowser_4.setGeometry(QtCore.QRect(30, 20, 221, 21))
-        self.textBrowser_4.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.textBrowser_4.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textBrowser_4.setReadOnly(False)
-        self.textBrowser_4.setOverwriteMode(True)
-        self.textBrowser_4.setPlaceholderText("")
-        self.textBrowser_4.setObjectName("textBrowser_4")
-
-        self.textBrowser_5 = QtWidgets.QTextBrowser(root)
-        self.textBrowser_5.setGeometry(QtCore.QRect(310, 20, 221, 21))
-        self.textBrowser_5.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.textBrowser_5.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textBrowser_5.setReadOnly(False)
-        self.textBrowser_5.setOverwriteMode(True)
-        self.textBrowser_5.setPlaceholderText("")
-        self.textBrowser_5.setObjectName("textBrowser_5")
-
-        self.textBrowser_6 = QtWidgets.QTextBrowser(root)
-        self.textBrowser_6.setGeometry(QtCore.QRect(30, 60, 221, 21))
-        self.textBrowser_6.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.textBrowser_6.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textBrowser_6.setReadOnly(False)
-        self.textBrowser_6.setOverwriteMode(True)
-        self.textBrowser_6.setPlaceholderText("")
-        self.textBrowser_6.setObjectName("textBrowser_6")
-
-        self.textBrowser_7 = QtWidgets.QTextBrowser(root)
-        self.textBrowser_7.setGeometry(QtCore.QRect(310, 60, 221, 21))
-        self.textBrowser_7.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.textBrowser_7.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textBrowser_7.setReadOnly(False)
-        self.textBrowser_7.setOverwriteMode(True)
-        self.textBrowser_7.setPlaceholderText("")
-        self.textBrowser_7.setObjectName("textBrowser_7")
-
-        self.retranslateUi(root)
-        self.buttonBox.accepted.connect(root.accept) # type: ignore
-        self.buttonBox.rejected.connect(root.reject) # type: ignore
-        QtCore.QMetaObject.connectSlotsByName(root)
-
-    def table_input(self, data):
-        """insert data from DB"""
-        self.tableWidget.setRowCount(len(data))
-        for i, j in enumerate(data):
-            self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem(j[0]))
-            self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(j[1]))
-            self.tableWidget.setItem(i, 2, QtWidgets.QTableWidgetItem(j[2]))
-    def retranslateUi(self, root):
-        _translate = QtCore.QCoreApplication.translate
-        root.setWindowTitle(_translate("root", "Airplane location"))
-        self.label.setText(_translate("root", "Min latitude"))
-        self.label_2.setText(_translate("root", "Max latitude"))
-        self.label_3.setText(_translate("root", "Min longitude"))
-        self.label_4.setText(_translate("root", "Max longitude"))
+    def to_list(self) -> list:
+        sqlite_connect = sqlite3.connect('airports.db')
+        cursor = sqlite_connect.cursor()
+        cursor.execute(f"SELECT DISTINCT city FROM airports ORDER BY city ASC")
+        return [city for cities in cursor.fetchall() for city in cities]
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    root = QtWidgets.QDialog()
-    ui = UiRoot()
-    ui.setupUi(root)
-    root.show()
-    sys.exit(app.exec_())
+class Controller:
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+
+    def get_airports(self, lat_min: str, lat_max: str, lon_min: str, lon_max: str):
+        """
+        Transferring data from model to view
+        """
+        self.model.lat_min = lat_min
+        self.model.lat_max = lat_max
+        self.model.lon_min = lon_min
+        self.model.lon_max = lon_max
+        airports = self.model.search_airports()
+        self.view.show_airports(airports)
+
+
+class Model:
+
+    def __init__(self):
+        self.lat_min = "0"
+        self.lat_max = "0"
+        self.lon_min = "0"
+        self.lon_max = "0"
+        self.src_city = "0"
+        self.dst_city = "0"
+        self.db = None
+
+    def set_db(self, db):
+        self.db = db
+
+    def search_airports(self) -> list:
+        """
+        Airports by coordinates in DB into list
+        """
+        coordinates = (self.lat_min, self.lat_max, self.lon_min, self.lon_max)
+        match = [re.match("^-?\d+$", item) for item in coordinates]
+        if None in match:
+            self.lat_min, self.lat_max, self.lon_min, self.lon_max = ("0", "0", "0", "0")
+        db_connection = self.db.db_connect()
+        cursor = db_connection.cursor()
+        cursor.execute(f"SELECT country, city, airport, latitude, longitude FROM airports WHERE"
+                       f" latitude BETWEEN {self.lat_min} and {self.lat_max} and"
+                       f" longitude BETWEEN {self.lon_min} and {self.lon_max}")
+        return cursor.fetchall()
+
+    def search_routes(self) -> list:
+
+        if None in (self.src_city, self.dst_city):
+            self.src_city, self.dst_city = ("0", "0")
+        db_connection = self.db.db_connect()
+        cursor = db_connection.cursor()
+        cursor.execute(f"SELECT src_airport, dst_airport, airplane FROM routes WHERE "
+                       f"src_airport_id IN (SELECT id FROM airports WHERE city = '{self.src_city}') AND "
+                       f"dst_airport_id IN (SELECT id FROM airports WHERE city = '{self.dst_city}')")
+        return cursor.fetchall()
+
+
+class View(ttk.Notebook):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.controller = None
+        self.data_extractor = DBFetch()
+        self.frame1 = ttk.Frame(self)
+        self.add(self.frame1, text="Airlines locator")
+        self.grid()
+        self.lat_min_entry = ttk.Entry(self.frame1, width=40)
+        self.lat_min_entry.insert(0, "0")
+        self.lat_max_entry = ttk.Entry(self.frame1, width=40)
+        self.lat_max_entry.insert(0, "0")
+        self.lon_min_entry = ttk.Entry(self.frame1, width=40)
+        self.lon_min_entry.insert(0, "0")
+        self.lon_max_entry = ttk.Entry(self.frame1, width=40)
+        self.lon_max_entry.insert(0, "0")
+        self.lat_min_label = ttk.Label(self.frame1, text="Min latitude:")
+        self.lat_max_label = ttk.Label(self.frame1, text="Max latitude:")
+        self.lon_min_label = ttk.Label(self.frame1, text="Min longitude:")
+        self.lon_max_label = ttk.Label(self.frame1, text="Max longitude:")
+        self.tree = ttk.Treeview(self.frame1, columns=("country", "city", "airport", "latitude", "longitude"),
+                                 show="headings", height=25)
+        self.tree.heading("city", text="city", anchor=W)
+        self.tree.heading("country", text="country", anchor=W)
+        self.tree.heading("airport", text="airport", anchor=W)
+        self.tree.heading("latitude", text="latitude", anchor=W)
+        self.tree.heading("longitude", text="longitude", anchor=W)
+        self.tree.column("#1", stretch=NO, width=100)
+        self.tree.column("#2", stretch=NO, width=120)
+        self.tree.column("#3", stretch=NO, width=300)
+        self.tree.column("#4", stretch=NO, width=140)
+        self.tree.column("#5", stretch=NO, width=140)
+        self.search_airports_btn = ttk.Button(self.frame1, text="Search", width=15,
+                                              command=self.clicked_show)
+        self.clear_btn = ttk.Button(self.frame1, text="Clear", width=15, command=self.clicked_clear)
+        self.lat_min_label.grid(row=0, column=0)
+        self.lat_max_label.grid(row=0, column=2)
+        self.lon_min_label.grid(row=1, column=0)
+        self.lon_max_label.grid(row=1, column=2)
+        self.lat_min_entry.grid(row=0, column=1)
+        self.lat_max_entry.grid(row=0, column=3)
+        self.lon_min_entry.grid(row=1, column=1)
+        self.lon_max_entry.grid(row=1, column=3)
+        self.search_airports_btn.grid(row=0, column=4)
+        self.clear_btn.grid(row=1, column=4)
+        self.tree.grid(row=2, column=0, columnspan=5)
+
+    def set_controller(self, controller):
+        self.controller = controller
+
+    def clicked_show(self):
+        if self.controller:
+            self.controller.get_airports(self.lat_min_entry.get(),
+                                         self.lat_max_entry.get(),
+                                         self.lon_min_entry.get(),
+                                         self.lon_max_entry.get())
+
+    def clicked_clear(self):
+        self.tree.delete(*self.tree.get_children())
+        self.lat_min_entry.delete(0, END)
+        self.lat_min_entry.insert(0, "0")
+        self.lat_max_entry.delete(0, END)
+        self.lat_max_entry.insert(0, "0")
+        self.lon_min_entry.delete(0, END)
+        self.lon_min_entry.insert(0, "0")
+        self.lon_max_entry.delete(0, END)
+        self.lon_max_entry.insert(0, "0")
+
+    def show_airports(self, airports):
+        self.tree.delete(*self.tree.get_children())
+        for airport in airports:
+            self.tree.insert("", END, values=airport)
+
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title('airlines locator')
+        db = DBConnect()
+        model = Model()
+        model.set_db(db)
+        view = View(self)
+        view.grid(row=0, column=0, padx=10, pady=10)
+        controller = Controller(model, view)
+        view.set_controller(controller)
+
+
+if __name__ == '__main__':
+    app = App()
+    app.mainloop()
